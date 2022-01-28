@@ -1,13 +1,13 @@
 {
-    "name": "Aluracord - Matrix (peas)",
+    "name": "Aluracord - Matrix (Big Brother)",
     "theme": {
         "colors": {
             "primary": {
-                "050": "#E3F9E5",
-                "100": "#C1EAC5",
-                "200": "#A3D9A5",
-                "300": "#7BC47F",
-                "400": "#57AE5B",
+                "050": "#d6ffb7",
+                "100": "#f5ff90",
+                "200": "#ffc15e",
+                "300": "#ff9f1c",
+                "400": "#080357",
                 "500": "#3F9142",
                 "600": "#2F8132",
                 "700": "#207227",

@@ -1,6 +1,6 @@
 import appConfig from '../config.json';
 import { Box, Button, Text, TextField, Image } from '@skynexui/components';
-
+import React from 'react';
 // Componentes React:
 
 function EstiloGlobal() {
@@ -66,7 +66,8 @@ function Titulo(props) {
 }
 
 export default function PaginaInicial() {
-    const username = 'peas';
+    // const username = 'Raoni1984';
+    const [username, setUsername] = React.useState('Raoni1984'); 
   
     return (
       <>
@@ -75,7 +76,7 @@ export default function PaginaInicial() {
           styleSheet={{
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             backgroundColor: appConfig.theme.colors.primary[500],
-            backgroundImage: 'url(https://virtualbackgrounds.site/wp-content/uploads/2020/08/the-matrix-digital-rain.jpg)',
+            backgroundImage: 'url(https://virtualbackgrounds.site/wp-content/uploads/2020/07/futuristic-office.jpg)',
             backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
           }}
         >
@@ -101,12 +102,18 @@ export default function PaginaInicial() {
                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                 width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
               }}
+              onSubmit = {
+                function(event) {
+                  event.preventDefault();
+                  console.log('Formulario foi submetido!');
+                }
+              }
             >
               <Titulo tag="h2">Boas vindas de volta!</Titulo>
               <Text variant="body3" styleSheet={{ marginBottom: '32px', color: appConfig.theme.colors.neutrals[300] }}>
                 {appConfig.name}
               </Text>
-  
+
               <TextField
                 fullWidth
                 textFieldColors={{
@@ -117,7 +124,16 @@ export default function PaginaInicial() {
                     backgroundColor: appConfig.theme.colors.neutrals[800],
                   },
                 }}
+                value={username}
+                onChange ={function (event) { 
+                  console.log('usuario digitou', event.target.value);
+                  //Onde está o valor?
+                  const valor = event.target.value;
+                  //Trocar o valor da variavel e avisa a galera interessa (listeners, observers etc):
+                  setUsername(valor);
+                }}
               />
+
               <Button
                 type='submit'
                 label='Entrar'
