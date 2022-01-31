@@ -1,46 +1,18 @@
 import appConfig from '../config.json';
 import { Box, Button, Text, TextField, Image } from '@skynexui/components';
 import React from 'react';
-// Componentes React:
+import { useRouter } from 'next/router';
 
-function EstiloGlobal() {
-    return (
-        <style global jsx>
-            {`
-                 * {
-                    margin: 0;
-                    padding: 0;
-                    box-sizing: border-box;
-                    list-style: none;
-                  }
+/* Desafios:
 
-                  body {
-                    font-family: 'Open Sans', sans-serif;
-                  }
+  Pratique mais com o useRouter!
+  Validação do campo: Só mostrar a imagem se tiver mais de 2 caracteres
+  Desafio Master: Pegar outras informações do usuário batendo na API do GitHub
+  Dica: você vai usar a função fetch do JavaScript
+  Colocar algo divertido na página 404.js da sua pasta pages e compartilhar com a gente no twitter!
 
-                  /* App fit Height */ 
-                  html, body, #__next {
-                    min-height: 100vh;
-                    display: flex;
-                    flex: 1;
-                  }
+*/
 
-                  #__next {
-                    flex: 1;
-                  }
-
-                  #__next > * {
-                    flex: 1;
-                  }
-
-                  body {
-                      font-family: 'Open Sans', sans-serif;
-                  }
-            `}
-
-        </style>
-    )
-}
 
 function Titulo(props) {
 
@@ -68,10 +40,10 @@ function Titulo(props) {
 export default function PaginaInicial() {
     // const username = 'Raoni1984';
     const [username, setUsername] = React.useState('Raoni1984'); 
+    const roteamento = useRouter();
   
     return (
       <>
-        <EstiloGlobal />
         <Box
           styleSheet={{
             display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -106,6 +78,8 @@ export default function PaginaInicial() {
                 function(event) {
                   event.preventDefault();
                   console.log('Formulario foi submetido!');
+                  //window.location.href = '/chat';
+                  roteamento.push('/chat');
                 }
               }
             >
