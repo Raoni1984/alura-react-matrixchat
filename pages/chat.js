@@ -1,12 +1,9 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React from 'react';
 import appConfig from '../config.json';
+import { createClient } from '@supabase/supabase-js';
 
-export default function ChatPage() {
-    const [mensagem, setMensagem] = React.useState('');
-    const [listaDeMensagens, setListaDeMensagens] = React.useState([]);
-
-    /*
+/*
     // Usuário
     - Usuário digita no campo textarea
     - Aperta enter para enviar
@@ -20,18 +17,74 @@ export default function ChatPage() {
     Desafios:
     Paulo: Colocar o botão de OK para enviar a mensagem
     Mario: Colocar um botão de apagar mensagem! Dica: use o filter
+    Mario Souto: Mostrar o loading de mensagens (Tem que fazer o mais criativo ein!)
+    Paulo Silveira: Fazer um efeito quando passar o mouse em cima (Use esse link como referência: https://pt-br.reactjs.org/docs/events.html#mouse-events)
+    Se quiser tentar criar alguma coisa mais diferentona, 
+    fique a vontade para criar e compartilhe com a gente :)
+*/
+
+export default function ChatPage() {
+    const [mensagem, setMensagem] = React.useState('');
+    const [listaDeMensagens, setListaDeMensagens] = React.useState([]);
+
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzY4NjY5MCwiZXhwIjoxOTU5MjYyNjkwfQ.bXk8rJ5zIQ81h9tKeW2z3xnW7JLGotUOzwtjmvL5Amk';
+    const SUPABASE_URL = 'https://osxjvqhoxprnbnccryot.supabase.co';
+
+    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    /*
+        No modo manual seria usando o Fetch do JS:
+        // fetch(`${SUPABASE_URL}/rest/v1/mensagens?select=*`, {
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         'apikey': SUPABASE_ANON_KEY,
+        //         'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+        //     }
+        // })
+        // .then((res) => {
+        //     return res.json();
+        // })
+        // .then((response) => {
+        //     console.log(response);
+        //});
     */
+
+    React.useEffect( () => {
+        supabaseClient
+        .from('mensagens')
+        .select('*')
+        .order('id', { ascending: false })
+        .then( ({ data }) => {
+            console.log("Dados = ", data);
+            setListaDeMensagens(data);
+        });
+    }, []);
+
+    
     function handleNovaMensagem(novaMensagem) {
         const mensagem = {
-            id: listaDeMensagens.length + 1,
-            de: 'vanessametonini',
+            // id: listaDeMensagens.length + 1,
+            // created_at: Date.now(),
+
+            //TODO: Descobrir como passar username de index.js
+            de: 'username',
             texto: novaMensagem,
         };
 
-        setListaDeMensagens([
-            mensagem,
-            ...listaDeMensagens,
-        ]);
+        supabaseClient
+            .from('mensagens')
+            .insert([
+                //Enviar objeto com os mesmos campos do BD:
+                mensagem
+            ])
+            .then( ({ data }) => {
+                console.log('Criando mensagem: ', data);
+                setListaDeMensagens([
+                    data[0],
+                    ...listaDeMensagens,
+                ]);
+            });
+
         setMensagem('');
     }
 
@@ -143,7 +196,7 @@ function MessageList(props) {
         <Box
             tag="ul"
             styleSheet={{
-                overflow: 'scroll',
+                overflow: 'none',
                 display: 'flex',
                 flexDirection: 'column-reverse',
                 flex: 1,
@@ -178,7 +231,11 @@ function MessageList(props) {
                                     display: 'inline-block',
                                     marginRight: '8px',
                                 }}
-                                src={`https://github.com/vanessametonini.png`}
+                                src={
+                                    mensagem.de != 'username' ? 
+                                    `https://github.com/${mensagem.de}.png`
+                                    : 'https://httpstatusdogs.com/img/404.jpg'
+                                }
                             />
                             <Text tag="strong">
                                 {mensagem.de}
@@ -194,7 +251,13 @@ function MessageList(props) {
                                 {(new Date().toLocaleDateString())}
                             </Text>
                         </Box>
-                        {mensagem.texto}
+                        <Text
+                            styleSheet={{
+                                marginLeft: '10px'
+                            }}
+                        >
+                            {mensagem.texto}
+                        </Text>
                     </Text>
                 );
             })}
