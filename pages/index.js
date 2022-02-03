@@ -79,7 +79,7 @@ export default function PaginaInicial() {
                   event.preventDefault();
                   console.log('Formulario foi submetido!');
                   //window.location.href = '/chat';
-                  roteamento.push('/chat');
+                  roteamento.push(`/chat?username=${username}`);
                 }
               }
             >
